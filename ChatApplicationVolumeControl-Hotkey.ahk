@@ -35,7 +35,7 @@ if (ProcessExist("slack.exe") or ProcessExist("Discord.exe")) {
 }
 return
 
-^F23::
+^F21::
 if (ProcessExist("slack.exe") or ProcessExist("Discord.exe")) {
     vol_slack_discord += vol_adjustment
     if (vol_slack_discord > 1)
