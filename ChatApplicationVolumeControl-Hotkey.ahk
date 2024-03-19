@@ -5,7 +5,7 @@
 
 vol_spotify := 0.5
 vol_slack_discord := 0.5
-vol_adjustment := 0.05
+vol_adjustment := 0.02
 
 ^F22::
 if (ProcessExist("Spotify.exe")) {
@@ -25,7 +25,7 @@ if (ProcessExist("Spotify.exe")) {
 }
 return
 
-^F21::
+^F23::
 if (ProcessExist("slack.exe") or ProcessExist("Discord.exe")) {
     vol_slack_discord -= vol_adjustment
     if (vol_slack_discord < 0)
