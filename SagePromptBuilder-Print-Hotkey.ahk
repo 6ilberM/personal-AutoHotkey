@@ -1,4 +1,8 @@
-﻿; AI Prompt Helper - Block key-down and act on key-up
+﻿#Persistent
+#NoEnv
+#SingleInstance Force
+
+; AI Prompt Helper - Block key-down and act on key-up
 ^F16::return  ; Block the key-down event completely
 
 ^F16 Up::  ; Act only on key-up
