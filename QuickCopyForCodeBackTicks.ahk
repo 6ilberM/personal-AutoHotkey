@@ -25,6 +25,8 @@
         CreateCodeBlock("cs")
     else if (SingleKey = "m")
         CreateCodeBlock("md")
+    else if (SingleKey = "j")
+        CreateCodeBlock("json")  
     else if (SingleKey = "x") {
         ; Prompt for custom language
         InputBox, langChoice, Code Block Language, Enter language:, , 250, 130
