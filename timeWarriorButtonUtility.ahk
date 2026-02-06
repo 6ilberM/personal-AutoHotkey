@@ -30,15 +30,6 @@ GetTags() {
     return "coding dev"  ; Default tags
 }
 
-^F17::  ; Ctrl+F17 - Quick start timer with tags from file
-    tags := GetTags()
-    Run, %comspec% /c wsl -e timew start %tags%,, Hide
-    Sleep, 500
-    tracking := GetTrackingInfo()
-    ToolTip, Started tracking: %tags%`n%tracking%
-    SetTimer, RemoveToolTip, 3000
-return
-
 !F17::  ; Alt+F17 - Stop timer
     Run, %comspec% /c wsl -e timew stop,, Hide
     Sleep, 500
@@ -64,84 +55,9 @@ return
     SetTimer, RemoveToolTip, 3000
 return
 
-!F19::  ; Alt+F19 - Continue @2
-    Run, %comspec% /c wsl -e timew continue @2,, Hide
-    Sleep, 500
-    ; Get what we're now tracking
-    tracking := GetTrackingInfo()
-    ToolTip, Resumed tracking @2`n%tracking%
-    SetTimer, RemoveToolTip, 3000
-return
 
 ^F20::  ; Ctrl+F20 - Show status
     tracking := GetTrackingInfo()
     ToolTip, %tracking%
     SetTimer, RemoveToolTip, 5000
 return
-
-F23::  ; F23 - Show focus session tracker with daily goal progress
-    ; --- Count Overall Focus Sessions
-    FileDelete, %TEMP%\focus_count.txt
-    RunWait, %comspec% /c wsl -e timew summary :day | grep -E "focus|h\^" | wc -l > %TEMP%\focus_count.txt,, Hide
-    FileRead, overallFocusCount, %TEMP%\focus_count.txt
-    overallFocusCount := Trim(overallFocusCount)
-    if (overallFocusCount = "")
-        overallFocusCount := 0
-
-    ; --- Count Rusty-Imber Focus Sessions
-    FileDelete, %TEMP%\rusty_count.txt
-    RunWait, %comspec% /c wsl -e timew summary :day | grep -E "focus|h\^" | grep "rusty-imber" | wc -l > %TEMP%\rusty_count.txt,, Hide
-    FileRead, rustyCount, %TEMP%\rusty_count.txt
-    rustyCount := Trim(rustyCount)
-    if (rustyCount = "")
-        rustyCount := 0
-
-    ; --- Get total focus time in seconds
-    FileDelete, %TEMP%\focus_time_seconds.txt
-    RunWait, %comspec% /c wsl -e timew summary :day focus:normal focus:h^ | grep "Total" | awk '{print $3}' > %TEMP%\focus_time_seconds.txt,, Hide
-    FileRead, focusTimeSeconds, %TEMP%\focus_time_seconds.txt
-    focusTimeSeconds := Trim(focusTimeSeconds)
-    if (focusTimeSeconds = "")
-        focusTimeSeconds := 0
-
-    ; --- Get formatted focus time
-    FileDelete, %TEMP%\focus_time.txt
-    RunWait, %comspec% /c wsl -e timew summary :day focus:normal focus:h^ | grep "Total" | awk '{print $2}' > %TEMP%\focus_time.txt,, Hide
-    FileRead, focusTime, %TEMP%\focus_time.txt
-    focusTime := Trim(focusTime)
-    if (focusTime = "")
-        focusTime := "0:00:00"
-
-    ; --- Calculate hours worked
-    hoursWorked := focusTimeSeconds / 3600
-    hoursWorkedFormatted := Round(hoursWorked, 1)  ; Round to 1 decimal place
-
-    ; --- Set daily goals
-    minGoalHours := 4
-    idealGoalHours := 6
-
-    ; --- Calculate goal percentages
-    minGoalPercent := Min(Round((hoursWorked / minGoalHours) * 100), 100)
-    idealGoalPercent := Min(Round((hoursWorked / idealGoalHours) * 100), 100)
-
-    ; --- Determine status message
-    if (hoursWorked >= idealGoalHours)
-        statusMsg := "GOAL ACHIEVED! You can chill now."
-    else if (hoursWorked >= minGoalHours)
-        statusMsg := "Minimum goal met! " . (idealGoalHours - hoursWorked) . " more hours for ideal."
-    else
-        statusMsg := "Need " . (minGoalHours - hoursWorked) . " more hours to reach minimum goal."
-
-    ; --- Format the tooltip text
-    tooltipText := "=== DAILY WORK TRACKER ===`n`n"
-    tooltipText .= "Hours Worked: " . hoursWorkedFormatted . " / " . idealGoalHours . " hours`n"
-    tooltipText .= "Minimum Goal (4h): " . minGoalPercent . "% complete`n"
-    tooltipText .= "Ideal Goal (6h): " . idealGoalPercent . "% complete`n`n"
-    tooltipText .= "Focus Sessions: " . overallFocusCount . " total (" . rustyCount . " on Rusty-Imber)`n`n"
-    tooltipText .= "STATUS: " . statusMsg
-
-    ; --- Display the tooltip
-    ToolTip, %tooltipText%
-    SetTimer, RemoveToolTip, 10000
-return
-
