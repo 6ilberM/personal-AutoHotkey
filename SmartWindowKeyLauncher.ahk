@@ -21,16 +21,16 @@ SmartLaunch(windowTitle, exePath, args := "") {
     }
 }
 
-#1::  ; Win+1 - Obsidian (with fallback)
-    WinGet, activeProcess, ProcessName, A
-    if (activeProcess = "Obsidian.exe") {
-        Send #1
-    } else {
-        SmartLaunch("ahk_exe Obsidian.exe", "C:\Program Files\Obsidian\Obsidian.exe")
-    }
-return
+;#1::  ; Win+1 - Obsidian (with fallback)
+;    WinGet, activeProcess, ProcessName, A
+;    if (activeProcess = "Obsidian.exe") {
+;        Send #1
+;    } else {
+;        SmartLaunch("ahk_exe Obsidian.exe", "C:\Program Files\Obsidian\Obsidian.exe")
+;    }
+;return
 
-#2::  ; Win+2 - Fork (with fallback)
+#1::  ; Win+2 - Fork (with fallback)
     WinGet, activeProcess, ProcessName, A
     if (activeProcess = "Fork.exe") {
         Send #2
@@ -39,7 +39,7 @@ return
     }
 return
 
-#3::  ; Win+3 - Codecks (better detection)
+#2::  ; Win+3 - Codecks (better detection)
     WinGet, activeProcess, ProcessName, A
     if (activeProcess = "chrome.exe") {
         Send #3
@@ -53,7 +53,7 @@ return
     }
 return
 
-#4::  ; Win+4 - Rider (with fallback)
+#3::  ; Win+4 - Rider (with fallback)
     WinGet, activeProcess, ProcessName, A
     if (activeProcess = "rider64.exe") {
         Send #4
@@ -62,7 +62,7 @@ return
     }
 return
 
-#5::  ; Win+5 - Unity (with fallback)
+#F1::  ; Win+5 - Unity (with fallback)
     WinGet, activeProcess, ProcessName, A
     if (activeProcess = "Unity.exe") {
         WinMinimize, ahk_exe Unity.exe
